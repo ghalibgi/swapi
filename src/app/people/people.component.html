@@ -1,0 +1,41 @@
+<div class="page-container">
+  <h2 class="title">Personnages de l’univers</h2>
+
+  <input
+    type="text"
+    placeholder="🔍 Rechercher un personnage..."
+    [(ngModel)]="searchQuery"
+    (input)="onSearchChange()"
+    class="search-bar"
+  />
+
+  @if (displayedPeople.length === 0) {
+    <div class="no-result">Aucun personnage trouvé 🫥</div>
+  }
+
+  <div class="people-grid">
+    @for (person of displayedPeople; track person) {
+      <a
+        class="people-card"
+        [routerLink]="['/people', getPersonId(person.url)]"
+      >
+        <div class="card-header">
+          <h3>{{ person.name }}</h3>
+        </div>
+        <div class="card-body">
+          <p><strong>Genre :</strong> {{ person.gender }}</p>
+          <p><strong>Taille :</strong> {{ person.height }} cm</p>
+          <p><strong>Poids :</strong> {{ person.mass }} kg</p>
+          <p><strong>Couleur des yeux :</strong> {{ person.eye_color }}</p>
+          <p><strong>Couleur de cheveux :</strong> {{ person.hair_color }}</p>
+        </div>
+      </a>
+    }
+  </div>
+
+  @if (!showAll && displayedPeople.length < allPeople.length) {
+    <div class="button-container">
+      <button class="show-more-button" (click)="toggleShowAll()">Voir plus</button>
+    </div>
+  }
+</div>

@@ -1,0 +1,40 @@
+<div class="page-container">
+    <h2 class="title">Vaisseaux Star Wars</h2>
+  
+    <input
+      type="text"
+      placeholder="🔍 Rechercher un vaisseau..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearchChange()"
+      class="search-bar"
+    />
+  
+    <div *ngIf="displayedStarships.length === 0" class="no-result">
+      Aucun vaisseau trouvé 🛰️
+    </div>
+  
+    <div class="starship-grid">
+      @for (ship of displayedStarships; track ship) {
+        <a
+          class="starship-card"
+          [routerLink]="['/starships', getStarshipId(ship.url)]"
+        >
+          <div class="card-header">
+            <h3>{{ ship.name }}</h3>
+            <span class="model">{{ ship.model }}</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Vitesse :</strong> {{ ship.max_atmosphering_speed }}</p>
+            <p><strong>Équipage :</strong> {{ ship.crew }}</p>
+            <p><strong>Passagers :</strong> {{ ship.passengers }}</p>
+            <p><strong>Capacité Cargo :</strong> {{ ship.cargo_capacity }}</p>
+          </div>
+        </a>
+      }
+    </div>
+  
+    <div class="button-container" *ngIf="!showAll && displayedStarships.length < allStarships.length">
+      <button class="show-more-button" (click)="toggleShowAll()">Voir plus</button>
+    </div>
+  </div>
+  

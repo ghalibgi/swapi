@@ -1,0 +1,132 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background: 
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
+    url('/starships.jpg') center/cover no-repeat;
+    color: #e0e0e0;
+    font-family: 'Orbitron', sans-serif;
+    padding: 2rem;
+  }
+  
+  /* Container principal */
+  .page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Titre principal */
+  .title {
+    text-align: center;
+    font-size: 3rem;
+    color: #ffe81f;
+    margin-bottom: 3rem;
+    text-shadow: 0 0 10px #ffe81f88;
+  }
+  
+  /* Barre de recherche */
+  .search-bar {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 2rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #2a2a2a;
+    color: #fff;
+    outline: none;
+    font-family: 'Orbitron', sans-serif;
+  }
+  
+  .search-bar::placeholder {
+    color: #888;
+  }
+  
+  /* Grille des cartes */
+  .starship-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+  
+  /* Carte vaisseau */
+  .starship-card {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 0 20px rgba(255, 232, 31, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  /* Hover */
+  .starship-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(255, 232, 31, 0.3);
+  }
+  
+  /* Header de carte */
+  .card-header {
+    margin-bottom: 1rem;
+  }
+  
+  .card-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #ffe81f;
+  }
+  
+  .model {
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+  
+  /* Contenu de la carte */
+  .card-body p {
+    margin: 0.3rem 0;
+    font-size: 0.95rem;
+    color: #adadff; /* couleur uniforme pour les détails */
+  }
+  
+  .card-body p strong {
+    color: #ffe81f;
+    font-weight: 500;
+  }
+  
+  /* Bouton "Voir plus" */
+  .button-container {
+    text-align: center;
+    margin-top: 2rem;
+  }
+  
+  .show-more-button {
+    background-color: #ffe81f;
+    color: #000;
+    padding: 0.8rem 1.5rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-family: 'Orbitron', sans-serif;
+  }
+  
+  .show-more-button:hover {
+    background-color: #fff02a;
+  }
+  
+  /* Aucun résultat */
+  .no-result {
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 2rem;
+    color: #999;
+  }
+  

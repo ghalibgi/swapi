@@ -1,0 +1,42 @@
+<div class="page-container">
+    <h2 class="title">Planètes de la Galaxie</h2>
+  
+    <input
+      type="text"
+      placeholder="🔍 Rechercher une planète..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearchChange()"
+      class="search-bar"
+    />
+  
+    @if (displayedPlanets.length === 0) {
+      <div class="no-result">Aucune planète trouvée 🪐</div>
+    }
+  
+    <div class="planet-grid">
+      @for (planet of displayedPlanets; track planet) {
+        <a
+          class="planet-card"
+          [routerLink]="['/planets', getPlanetId(planet.url)]"
+        >
+          <div class="card-header">
+            <h3>{{ planet.name }}</h3>
+            <span class="terrain">{{ planet.terrain }}</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Climat :</strong> {{ planet.climate }}</p>
+            <p><strong>Population :</strong> {{ planet.population }}</p>
+            <p><strong>Gravité :</strong> {{ planet.gravity }}</p>
+            <p><strong>Diamètre :</strong> {{ planet.diameter }}</p>
+          </div>
+        </a>
+      }
+    </div>
+  
+    @if (!showAll && displayedPlanets.length < allPlanets.length) {
+      <div class="button-container">
+        <button class="show-more-button" (click)="toggleShowAll()">Voir plus</button>
+      </div>
+    }
+  </div>
+  

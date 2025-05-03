@@ -1,0 +1,114 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)),
+  url('/char.jpg');
+background-size: cover;
+background-position: center top;
+background-repeat: no-repeat;
+
+  color: #e0e0e0;
+  font-family: 'Orbitron', sans-serif;
+  padding: 2rem;
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  font-size: 3rem;
+  color: #ffffff;
+  margin-bottom: 3rem;
+  text-shadow: 0 0 10px #ffffff88;
+}
+
+.search-bar {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 2rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #2a2a2a;
+  color: #fff;
+  outline: none;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.search-bar::placeholder {
+  color: #888;
+}
+
+.people-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.people-card {
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none; 
+  color: inherit; 
+  justify-content: space-between;
+}
+
+.people-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.card-body p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.card-body p strong {
+  color: #ffe81f;
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.show-more-button {
+  background-color: #ffe81f;
+  color: #000;
+  padding: 0.8rem 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.show-more-button:hover {
+  background-color: #fff02a;
+}
+
+.no-result {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 2rem;
+  color: #999;
+}

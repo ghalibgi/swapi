@@ -1,0 +1,19 @@
+<nav class="navbar">
+  <a routerLink="/" class="logo-link">
+    <img src="/logo.png" alt="Star Wars Logo" class="logo" />
+  </a>
+  <div class="nav-links">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
+    <a routerLink="/people" routerLinkActive="active">Personnages</a>
+    <a routerLink="/films" routerLinkActive="active">Films</a>
+    <a routerLink="/starships" routerLinkActive="active">Vaisseaux</a>
+    <a routerLink="/species" routerLinkActive="active">Espèces</a>
+    <a routerLink="/planets" routerLinkActive="active">Planètes</a>
+    <a routerLink="/vehicles" routerLinkActive="active">Véhicules</a>
+    <a routerLink="/create-character" routerLinkActive="active">Création</a>
+    <!-- Bouton About-us avec l'appel à la méthode playSoundAndNavigate() -->
+    <a  routerLink="/About-us" (click)="playSoundAndNavigate()" class="nav-link" routerLinkActive="active">About-us</a>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>

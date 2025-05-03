@@ -1,0 +1,17 @@
+<button (click)="goBack()" class="back-button">⬅ Retour aux vaisseaux</button>
+
+@if (starship) {
+    <div class="detail-container">
+      <h2>{{ starship.name }}</h2>
+      <p><strong>Modèle :</strong> {{ starship.model }}</p>
+      <p><strong>Fabricant :</strong> {{ starship.manufacturer }}</p>
+      <p><strong>Coût :</strong> {{ starship.cost_in_credits }} crédits</p>
+      <p><strong>Vitesse atmosphérique max :</strong> {{ starship.max_atmosphering_speed }}</p>
+      <p><strong>Hyperdrive Rating :</strong> {{ starship.hyperdrive_rating }}</p>
+      <p><strong>Longueur :</strong> {{ starship.length }}</p>
+      <p><strong>Capacité de cargo :</strong> {{ starship.cargo_capacity }}</p>
+      <p><strong>Équipage :</strong> {{ starship.crew }}</p>
+      <p><strong>Passagers :</strong> {{ starship.passengers }}</p>
+    </div>
+  }
+  

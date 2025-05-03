@@ -1,0 +1,14 @@
+<button (click)="goBack()" class="back-button">⬅ Retour aux planètes</button>
+
+@if (planet) {
+  <div class="detail-container">
+    <h2>{{ planet.name }}</h2>
+    <p><strong>Climat :</strong> {{ planet.climate }}</p>
+    <p><strong>Terrain :</strong> {{ planet.terrain }}</p>
+    <p><strong>Population :</strong> {{ planet.population }}</p>
+    <p><strong>Gravité :</strong> {{ planet.gravity }}</p>
+    <p><strong>Diamètre :</strong> {{ planet.diameter }} km</p>
+    <p><strong>Durée du jour :</strong> {{ planet.rotation_period }} heures</p>
+    <p><strong>Durée de l’année :</strong> {{ planet.orbital_period }} jours</p>
+  </div>
+}

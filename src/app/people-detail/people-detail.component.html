@@ -1,0 +1,46 @@
+<!-- people-detail.component.html -->
+<button (click)="goBack()" class="back-button">⬅ Retour aux personnages</button>
+
+@if (person) {
+  <div class="detail-container">
+    <h2>{{ person.name }}</h2>
+
+    <p><strong>Genre :</strong> {{ person.gender }}</p>
+    <p><strong>Taille :</strong> {{ person.height }} cm</p>
+    <p><strong>Poids :</strong> {{ person.mass }} kg</p>
+    <p><strong>Couleur des yeux :</strong> {{ person.eye_color }}</p>
+    <p><strong>Couleur de cheveux :</strong> {{ person.hair_color }}</p>
+    <p><strong>Couleur de peau :</strong> {{ person.skin_color }}</p>
+    <p><strong>Année de naissance :</strong> {{ person.birth_year }}</p>
+
+    <p><strong>Planète d'origine :</strong> {{ homeworld }}</p>
+    <p><strong>Espèce :</strong> {{ species }}</p>
+
+    @if (films.length > 0) {
+      <p><strong>Films :</strong></p>
+      <ul>
+        @for (film of films; track film) {
+          <li>{{ film }}</li>
+        }
+      </ul>
+    }
+
+    @if (starships.length > 0) {
+      <p><strong>Vaisseaux pilotés :</strong></p>
+      <ul>
+        @for (ship of starships; track ship) {
+          <li>{{ ship }}</li>
+        }
+      </ul>
+    }
+
+    @if (vehicles.length > 0) {
+      <p><strong>Véhicules utilisés :</strong></p>
+      <ul>
+        @for (v of vehicles; track v) {
+          <li>{{ v }}</li>
+        }
+      </ul>
+    }
+  </div>
+}

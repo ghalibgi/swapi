@@ -1,0 +1,19 @@
+<div class="page-container">
+    <h2 class="title">Les films Star Wars</h2>
+  
+    <div class="films-grid">
+      @for (film of films; track film) {
+        <a class="film-card" [routerLink]="['/films', getFilmId(film.url)]">
+          <div class="card-header">
+            <h3>Episode {{ film.episode_id }}<br />{{ film.title }}</h3>
+          </div>
+          <div class="card-body">
+            <p><strong>Réalisateur :</strong> {{ film.director }}</p>
+            <p><strong>Producteurs :</strong> {{ film.producer }}</p>
+            <p><strong>Date de sortie :</strong> {{ film.release_date }}</p>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+  

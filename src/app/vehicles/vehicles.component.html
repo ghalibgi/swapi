@@ -1,0 +1,23 @@
+<div class="page-container">
+    <h2 class="title">Véhicules de l'univers</h2>
+  
+    <div class="vehicles-grid">
+      @for (vehicle of vehicles; track vehicle) {
+        <div class="vehicle-card">
+          <div class="card-header">
+            <h3>{{ vehicle.name }}</h3>
+            <p class="model">Modèle : {{ vehicle.model }}</p>
+          </div>
+          <div class="card-body">
+            <p><strong>Fabricant :</strong> {{ vehicle.manufacturer }}</p>
+            <p><strong>Coût :</strong> {{ vehicle.cost_in_credits }} crédits</p>
+            <p><strong>Longueur :</strong> {{ vehicle.length }} m</p>
+            <p><strong>Vitesse max :</strong> {{ vehicle.max_atmosphering_speed }}</p>
+            <p><strong>Passagers :</strong> {{ vehicle.passengers }}</p>
+            <p><strong>Capacité cargo :</strong> {{ vehicle.cargo_capacity }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  
