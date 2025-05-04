@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { SwapiService } from '../swapi.service';  // Assure-toi d'importer le service SWAPI
+import { CharacterService } from '../config/api.config';  // Assure-toi d'importer le service Gemini
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { GEMINI_API_KEY } from '../config/api.config';
 
 @Component({
   selector: 'app-create-character',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './create-character.component.html',
-  styleUrls: ['./create-character.component.css']
+  styleUrls: ['./create-character.component.css'],
 })
-export class CreateCharacterComponent implements OnInit {
+export class CreateCharacterComponent {
   character = {
     name: '',
     gender: 'male',
@@ -20,103 +19,48 @@ export class CreateCharacterComponent implements OnInit {
     height: null,
     eye_color: '',
     hair_color: '',
-    homeworld: ''
+    homeworld: '',
   };
 
-  generatedStory: string | null = null;
-  isLoading: boolean = false;
+  isLoading = false;
+  generatedStory: string = '';
+  speciesList: any[] = [];
+  languages = ['Basic', 'Huttese', 'Shyriiwook'];
+  planets = ['Tatooine', 'Alderaan', 'Coruscant'];
 
-  planets: string[] = [];
-  languages: string[] = [];
-  speciesList: string[] = [];
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    private swapiService: SwapiService,  // Service pour récupérer les données SWAPI
+    private characterService: CharacterService // Service pour générer l'histoire avec Gemini
+  ) {}
 
   ngOnInit(): void {
-    this.fetchAllPlanets();
-    this.fetchAllSpecies();
+    this.loadSpecies();  // Charger les espèces lors de l'initialisation du composant
   }
 
-  generateCharacter(): void {
-    this.isLoading = true;
-    this.generatedStory = null;
-
-    this.generateStoryFromGemini(() => {
-      this.isLoading = false;
-    });
-  }
-
-  generateStoryFromGemini(callback: () => void): void {
-    const prompt = `Crée une courte histoire dans l'univers Star Wars à propos de ce personnage :
-Nom : ${this.character.name}
-Espèce : ${this.character.species}
-Genre : ${this.character.gender}
-Langue : ${this.character.language}
-Taille : ${this.character.height} cm
-Cheveux : ${this.character.hair_color}
-Yeux : ${this.character.eye_color}
-Planète d'origine : ${this.character.homeworld}
-
-Raconte-moi son rôle dans la galaxie avec style.`;
-
-    const headers = {
-      'Content-Type': 'application/json'
-    };
-
-    const body = {
-      instances: [
-        {
-          messages: [
-            {
-              author: "user",
-              content: prompt
-            }
-          ]
-        }
-      ],
-      parameters: {
-        temperature: 0.8,
-        maxOutputTokens: 400
-      }
-    };
-
-    const url = `https://generativelanguage.googleapis.com/v1/models/chat-bison-001:predict?key=${GEMINI_API_KEY}`;
-
-    this.http.post(url, body, { headers }).subscribe({
-      next: (res: any) => {
-        console.log('Réponse Gemini:', res);
-        this.generatedStory = res.predictions?.[0]?.candidates?.[0]?.content || 'Aucune histoire générée.';
-        callback();
+  loadSpecies(): void {
+    this.swapiService.getSpecies().subscribe(
+      (species) => {
+        this.speciesList = species;  // Récupérer les espèces depuis SWAPI
       },
-      error: (err) => {
-        console.error('Erreur Gemini:', JSON.stringify(err, null, 2));
-        this.generatedStory = 'Erreur lors de la génération de l’histoire.';
-        callback();
+      (error) => {
+        console.error('Erreur lors du chargement des espèces', error);
       }
-    });
+    );
   }
 
-  fetchAllPlanets(): void {
-    const fetchPage = (url: string) => {
-      this.http.get<any>(url).subscribe(res => {
-        const names = res.results.map((p: any) => p.name);
-        this.planets.push(...names);
-        if (res.next) fetchPage(res.next);
-      });
-    };
-    fetchPage('https://swapi.dev/api/planets/');
-  }
+  generateCharacter() {
+    this.isLoading = true;
+    this.generatedStory = '';  // Réinitialiser l'histoire avant chaque nouvelle génération
 
-  fetchAllSpecies(): void {
-    const fetchPage = (url: string) => {
-      this.http.get<any>(url).subscribe(res => {
-        const speciesNames = res.results.map((s: any) => s.name);
-        const speciesLanguages = res.results.map((s: any) => s.language).filter((l: string) => l);
-        this.speciesList.push(...speciesNames);
-        this.languages.push(...speciesLanguages);
-        if (res.next) fetchPage(res.next);
-      });
-    };
-    fetchPage('https://swapi.dev/api/species/');
+    this.characterService.generateStory(this.character).subscribe(
+      (response) => {
+        this.generatedStory = response.generatedStory;  // La réponse de l'API Gemini contient l'histoire générée
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Erreur lors de la génération de l\'histoire', error);
+        this.isLoading = false;
+      }
+    );
   }
 }
