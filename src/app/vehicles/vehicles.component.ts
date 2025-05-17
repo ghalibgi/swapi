@@ -15,20 +15,24 @@ export class VehiclesComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.fetchAllVehicles();
+    this.vehicles = [];
+    this.fetchAllVehiclesPaginated('https://www.swapi.tech/api/vehicles/');
   }
 
-  fetchAllVehicles(): void {
-    const fetchPage = (url: string) => {
-      this.http.get<any>(url).subscribe(response => {
+  fetchAllVehiclesPaginated(url: string): void {
+    this.http.get<any>(url).subscribe(response => {
+      if (Array.isArray(response.results)) {
         this.vehicles = [...this.vehicles, ...response.results];
+      }
 
-        if (response.next) {
-          fetchPage(response.next);
-        }
-      });
-    };
-
-    fetchPage('https://swapi.dev/api/vehicles/');
+      if (response.next) {
+        this.fetchAllVehiclesPaginated(response.next);
+      } else {
+        // Ici tu peux faire une action à la fin si besoin
+        console.log('Tous les véhicules chargés', this.vehicles);
+      }
+    }, error => {
+      console.error('Erreur lors de la récupération des véhicules paginés:', error);
+    });
   }
 }

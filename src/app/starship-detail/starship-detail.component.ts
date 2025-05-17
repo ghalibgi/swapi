@@ -22,8 +22,11 @@ export class StarshipDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.http.get(`https://swapi.dev/api/starships/${id}/`).subscribe(data => {
-        this.starship = data;
+      this.http.get<any>(`https://www.swapi.tech/api/starships/${id}/`).subscribe(data => {
+        // Les détails sont dans data.result.properties
+        this.starship = data.result.properties;
+      }, error => {
+        console.error('Erreur lors de la récupération du détail du vaisseau:', error);
       });
     }
   }

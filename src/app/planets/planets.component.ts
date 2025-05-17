@@ -20,23 +20,24 @@ export class PlanetsComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.fetchAllPlanets();
+    this.allPlanets = [];
+    this.fetchAllPlanetsPaginated('https://www.swapi.tech/api/planets/');
   }
 
-  fetchAllPlanets(): void {
-    const fetchPage = (url: string) => {
-      const fullUrl = url.startsWith('http') ? url : `https://swapi.dev${url}`;
-      this.http.get<any>(fullUrl).subscribe(response => {
+  fetchAllPlanetsPaginated(url: string): void {
+    this.http.get<any>(url).subscribe(response => {
+      if (Array.isArray(response.results)) {
         this.allPlanets = [...this.allPlanets, ...response.results];
-        if (response.next) {
-          fetchPage(response.next);
-        } else {
-          this.updateDisplayedPlanets();
-        }
-      });
-    };
+      }
 
-    fetchPage('https://swapi.dev/api/planets/');
+      if (response.next) {
+        this.fetchAllPlanetsPaginated(response.next);
+      } else {
+        this.updateDisplayedPlanets();
+      }
+    }, error => {
+      console.error('Erreur lors de la récupération des planètes paginées:', error);
+    });
   }
 
   updateDisplayedPlanets(): void {

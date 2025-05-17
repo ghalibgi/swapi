@@ -16,8 +16,13 @@ export class FilmsComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get<any>('https://swapi.dev/api/films/').subscribe(response => {
-      this.films = response.results.sort((a: any, b: any) => a.episode_id - b.episode_id);
+    this.http.get<any>('https://www.swapi.tech/api/films/').subscribe(response => {
+      // response.result est un tableau de films
+      this.films = response.result
+        .map((film: any) => film.properties) // on extrait la propriété properties
+        .sort((a: any, b: any) => a.episode_id - b.episode_id);
+    }, error => {
+      console.error('Erreur lors de la récupération des films:', error);
     });
   }
 

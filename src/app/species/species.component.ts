@@ -15,32 +15,58 @@ export class SpeciesComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.fetchAllSpecies();
+    this.species = [];
+    this.fetchAllSpeciesPaginated('https://www.swapi.tech/api/species/');
   }
 
-  fetchAllSpecies(): void {
-    const fetchPage = (url: string) => {
-      this.http.get<any>(url).subscribe(response => {
-        const current = response.results;
-        const withHomeworld = current.map((s: any) => {
-          if (s.homeworld) {
-            this.http.get<any>(s.homeworld).subscribe(homeworld => {
-              s.homeworldName = homeworld.name;
-            });
-          } else {
-            s.homeworldName = null;
-          }
-          return s;
-        });
+  fetchAllSpeciesPaginated(url: string): void {
+    this.http.get<any>(url).subscribe(response => {
+      if (Array.isArray(response.results)) {
+        // On ajoute les espèces basiques à la liste (avec url, uid, name)
+        this.species = [...this.species, ...response.results];
+      }
 
-        this.species = [...this.species, ...withHomeworld];
+      if (response.next) {
+        this.fetchAllSpeciesPaginated(response.next);
+      } else {
+        // Quand toutes les pages sont chargées, on récupère les homeworlds
+        this.loadHomeworldsForSpecies();
+      }
+    }, error => {
+      console.error('Erreur lors de la récupération des espèces paginées:', error);
+    });
+  }
 
-        if (response.next) {
-          fetchPage(response.next);
+  loadHomeworldsForSpecies(): void {
+    // Pour chaque espèce, on récupère ses détails pour obtenir le champ homeworld
+    const promises = this.species.map(sp =>
+      this.http.get<any>(sp.url).toPromise()
+    );
+
+    Promise.all(promises).then(results => {
+      // Met à jour chaque espèce avec homeworldName récupéré si homeworld existe
+      this.species = results.map(res => {
+        const properties = res.result.properties;
+        const sp = {
+          uid: res.result.uid,
+          name: properties.name,
+          classification: properties.classification,
+          designation: properties.designation,
+          homeworldName: null
+        };
+
+        if (properties.homeworld) {
+          // Récupérer le nom de la planète homeworld
+          // Attention : c'est asynchrone, on va faire un appel pour chaque homeworld
+          this.http.get<any>(properties.homeworld).subscribe(hw => {
+            sp.homeworldName = hw.result.properties.name;
+          });
         }
-      });
-    };
 
-    fetchPage('https://swapi.dev/api/species/');
+        return sp;
+      });
+    }).catch(error => {
+      console.error('Erreur lors du chargement des détails des espèces:', error);
+    });
   }
 }

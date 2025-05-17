@@ -25,53 +25,86 @@ export class PeopleDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.http.get(`https://swapi.dev/api/people/${id}/`).subscribe((data: any) => {
-        this.person = data;
-
-        // Planète d’origine
-        if (data.homeworld) {
-          this.http.get<any>(data.homeworld).subscribe(world => {
-            this.homeworld = world.name;
-          });
-        }
-
-        // Espèce
-        if (data.species?.length > 0) {
-          this.http.get<any>(data.species[0]).subscribe(species => {
-            this.species = species.name;
-          });
-        }
-
-        // Films
-        if (data.films?.length > 0) {
-          Promise.all(data.films.map((url: string) =>
-            this.http.get<any>(url).toPromise()
-          )).then(results => {
-            this.films = results.map(film => film.title);
-          });
-        }
-
-        // Vaisseaux
-        if (data.starships?.length > 0) {
-          Promise.all(data.starships.map((url: string) =>
-            this.http.get<any>(url).toPromise()
-          )).then(results => {
-            this.starships = results.map(s => s.name);
-          });
-        }
-
-        // Véhicules
-        if (data.vehicles?.length > 0) {
-          Promise.all(data.vehicles.map((url: string) =>
-            this.http.get<any>(url).toPromise()
-          )).then(results => {
-            this.vehicles = results.map(v => v.name);
-          });
-        }
-      });
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (!idParam) {
+      console.error('Aucun ID reçu dans la route.');
+      return;
     }
+
+    // Nettoyer l'id au cas où ce serait une URL complète, garder juste l'id numérique
+    const id = this.extractIdFromParam(idParam);
+
+    const url = `https://www.swapi.tech/api/people/${id}/`;
+
+    this.http.get<any>(url).subscribe({
+      next: data => {
+        if (data?.result?.properties) {
+          this.person = data.result.properties;
+
+          // Planète d’origine
+          if (this.person.homeworld) {
+            this.http.get<any>(this.person.homeworld).subscribe(hw => {
+              this.homeworld = hw?.result?.properties?.name || '';
+            });
+          }
+
+          // Espèce
+          if (this.person.species && this.person.species.length > 0) {
+            this.http.get<any>(this.person.species[0]).subscribe(sp => {
+              this.species = sp?.result?.properties?.name || '';
+            });
+          }
+
+          // Films
+          if (this.person.films && this.person.films.length > 0) {
+            Promise.all(
+              this.person.films.map((url: string) => this.http.get<any>(url).toPromise())
+            ).then(results => {
+              this.films = results
+                .filter(r => r?.result?.properties?.title)
+                .map(r => r.result.properties.title);
+            });
+          }
+
+          // Starships
+          if (this.person.starships && this.person.starships.length > 0) {
+            Promise.all(
+              this.person.starships.map((url: string) => this.http.get<any>(url).toPromise())
+            ).then(results => {
+              this.starships = results
+                .filter(r => r?.result?.properties?.name)
+                .map(r => r.result.properties.name);
+            });
+          }
+
+          // Vehicles
+          if (this.person.vehicles && this.person.vehicles.length > 0) {
+            Promise.all(
+              this.person.vehicles.map((url: string) => this.http.get<any>(url).toPromise())
+            ).then(results => {
+              this.vehicles = results
+                .filter(r => r?.result?.properties?.name)
+                .map(r => r.result.properties.name);
+            });
+          }
+        } else {
+          console.error('Données personnage manquantes ou incorrectes dans la réponse API');
+        }
+      },
+      error: err => {
+        console.error('Erreur lors de la récupération du personnage:', err);
+      }
+    });
+  }
+
+  // Extrait l'id numérique depuis un paramètre qui peut être une URL ou un simple id
+  extractIdFromParam(param: string): string {
+    if (param.startsWith('http')) {
+      const parts = param.split('/');
+      // gère un trailing slash éventuel
+      return parts[parts.length - 1] === '' ? parts[parts.length - 2] : parts[parts.length - 1];
+    }
+    return param;
   }
 
   goBack(): void {

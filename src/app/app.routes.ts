@@ -51,11 +51,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./people-detail/people-detail.component').then((m) => m.PeopleDetailComponent)
   },
-  {
-    path: 'create-character',
-    loadComponent: () =>
-      import('./create-character/create-character.component').then((m) => m.CreateCharacterComponent)
-  },
   {path:'aboutus',
   loadComponent: () =>
   import('./aboutus/aboutus.component').then((m) => m.AboutusComponent)

@@ -8,7 +8,7 @@ import { Observable, map } from 'rxjs';
 export class SwapiService {
   httpClient = inject(HttpClient)
 
-  private baseUrl = 'https://swapi.dev/api';
+  private baseUrl = 'https://www.swapi.tech/api/';
 
   constructor(private http: HttpClient) {}
 

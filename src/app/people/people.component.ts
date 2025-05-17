@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { SwapiService } from '../swapi.service'; // adapte le chemin si besoin
 
 @Component({
   selector: 'app-people',
@@ -17,26 +17,17 @@ export class PeopleComponent implements OnInit {
   searchQuery: string = '';
   showAll: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private swapiService: SwapiService) {}
 
   ngOnInit(): void {
     this.fetchAllPeople();
   }
 
   fetchAllPeople(): void {
-    const fetchPage = (url: string) => {
-      const fullUrl = url.startsWith('http') ? url : `https://swapi.dev${url}`;
-      this.http.get<any>(fullUrl).subscribe(response => {
-        this.allPeople = [...this.allPeople, ...response.results];
-        if (response.next) {
-          fetchPage(response.next);
-        } else {
-          this.updateDisplayedPeople();
-        }
-      });
-    };
-
-    fetchPage('https://swapi.dev/api/people/');
+    this.swapiService.getPeople().subscribe(response => {
+      this.allPeople = response;
+      this.updateDisplayedPeople();
+    });
   }
 
   updateDisplayedPeople(): void {
@@ -55,8 +46,7 @@ export class PeopleComponent implements OnInit {
     this.updateDisplayedPeople();
   }
 
-  getPersonId(url: string): string {
-    const parts = url.split('/');
-    return parts[parts.length - 2];
+  getPersonId(uid: string): string {
+    return uid; // Swapi.tech renvoie directement l'ID dans `uid`
   }
 }
